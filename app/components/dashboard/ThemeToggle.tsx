@@ -38,5 +38,3 @@ export function ThemeToggle() {
     </DropdownMenu>
   );
 }
-
-// Time 1:13:30
