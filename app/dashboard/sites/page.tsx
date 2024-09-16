@@ -85,7 +85,9 @@ export default async function SitesPageRoute() {
 
               <CardFooter>
                 <Button asChild className="w-full">
-                  <Link href="#">View Articles</Link>
+                  <Link href={`/dashboard/sites/${item.id}`}>
+                    View Articles
+                  </Link>
                 </Button>
               </CardFooter>
             </Card>
@@ -95,5 +97,3 @@ export default async function SitesPageRoute() {
     </>
   );
 }
-
-// 2:44:23
