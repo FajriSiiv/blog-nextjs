@@ -1,13 +1,40 @@
+import { EmptyState } from "@/app/components/dashboard/EmptyState";
 import prisma from "@/app/utils/db";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import {
   Book,
   FileIcon,
+  MoreHorizontal,
   PlusCircle,
   PlusCircleIcon,
   Settings,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -59,7 +86,7 @@ export default async function SiteIdRoute({
           </Link>
         </Button>
         <Button asChild variant="secondary">
-          <Link href={"#"}>
+          <Link href={`/dashboard/sites/${params.siteId}/settings`}>
             <Settings className="size-4 mr-2" />
             Settings
           </Link>
@@ -73,25 +100,93 @@ export default async function SiteIdRoute({
       </div>
 
       {data === undefined || data.length === 0 ? (
-        <div className="flex flex-col gap-3  items-center p-8 border border-dashed text-center animate-in fade-in-50 rounded-lg">
-          <div className="w-fit p-8 rounded-full bg-primary/10">
-            <FileIcon className="size-10 text-primary" />
-          </div>
-          <h2 className="text-lg font-semibold">
-            You dont have any Sites created
-          </h2>
-          <p className="mb-8 mt-2 text-center text-sm leading-tight text-muted-foreground max-w-sm mx-auto">
-            You ccurrently dont have any Sites. Please create some so that you
-            can see them right here!
-          </p>
-          <Button asChild>
-            <Link href={`/dashboard/sites/${params.siteId}/create`}>
-              <PlusCircle className="mr-2 size-4" /> Create Site
-            </Link>
-          </Button>
-        </div>
+        <EmptyState
+          title="You dont have any Articles created"
+          description="You ccurrently dont have any Articles. Please create some so that you can
+        see them right here!"
+          buttonText="Create Article"
+          href={`/dashboard/sites/${params.siteId}/create`}
+        />
       ) : (
-        <h1>Not Empty</h1>
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Articles</CardTitle>
+              <CardDescription>Manage your Article</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Image</TableHead>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          width={64}
+                          height={64}
+                          className="size-16 rounded-md object-cover"
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {item.title}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className="bg-emerald-100/90 text-emerald-500"
+                        >
+                          Published
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {new Intl.DateTimeFormat("en-US", {
+                          dateStyle: "medium",
+                        }).format(item.createdAt)}
+                      </TableCell>
+                      <TableCell className="text-end">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button size="icon" variant="ghost">
+                              <MoreHorizontal className="size-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem asChild>
+                              <Link
+                                href={`/dashboard/sites/${params.siteId}/${item.id}`}
+                              >
+                                Edit
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link
+                                href={`/dashboard/sites/${params.siteId}/${item.id}/delete`}
+                              >
+                                Delete
+                              </Link>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </>
   );

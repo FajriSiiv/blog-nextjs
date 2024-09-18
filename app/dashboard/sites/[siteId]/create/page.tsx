@@ -36,8 +36,8 @@ export default function ArticleCreationRoute({
   const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
   const [value, setValue] = useState<JSONContent | undefined>(undefined);
   const [title, setTitle] = useState<undefined | string>(undefined);
-  const [lastResult, action] = useActionState(CreatePostAction, undefined);
   const [slug, setSlugValue] = useState<undefined | string>(undefined);
+  const [lastResult, action] = useActionState(CreatePostAction, undefined);
 
   const [form, fields] = useForm({
     lastResult,
