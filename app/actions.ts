@@ -1,9 +1,10 @@
 "use server";
 import { redirect } from "next/navigation";
 import { parseWithZod } from "@conform-to/zod";
-import { PostSchema, SiteCreationSchema, siteSchema } from "./utils/zodSchemas";
+import { PostSchema, SiteCreationSchema } from "./utils/zodSchemas";
 import { requireUser } from "./utils/requireUser";
 import prisma from "./utils/db";
+import { checkingSlug } from "./utils/checkingSlug";
 
 export async function CreateSiteAction(prevState: any, formData: FormData) {
   const user = await requireUser();
@@ -40,8 +41,13 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
 
 export async function CreatePostAction(prevState: any, formData: FormData) {
   const user = await requireUser();
+  const slugUnique = await checkingSlug(formData.get("slug") as string);
 
-  const submission = parseWithZod(formData, {
+  if (slugUnique.status === "error") {
+    return slugUnique;
+  }
+
+  const submission = await parseWithZod(formData, {
     schema: PostSchema,
   });
 

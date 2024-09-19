@@ -8,14 +8,14 @@ export const siteSchema = z.object({
 });
 
 export const PostSchema = z.object({
-  title: z.string().min(1).max(100),
   slug: z.string().min(1).max(190),
+  title: z.string().min(1).max(100),
   coverImage: z.string().min(1),
   smallDescription: z.string().min(1).max(200),
   articleContent: z.string().min(1),
 });
 
-// Basic validation / Handling error jika subdirectory 1 text terus menerus jika dibuat
+// Basic validation / Handling error jika subdirectory nya sama
 export function SiteCreationSchema(options?: {
   isSubDirectoryUnique: () => Promise<boolean>;
 }) {

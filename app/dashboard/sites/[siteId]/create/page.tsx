@@ -39,7 +39,7 @@ export default function ArticleCreationRoute({
   const [slug, setSlugValue] = useState<undefined | string>(undefined);
   const [lastResult, action] = useActionState(CreatePostAction, undefined);
 
-  const [form, fields] = useForm({
+  const [form, fields]: any = useForm({
     lastResult,
 
     onValidate({ formData }) {
@@ -123,7 +123,9 @@ export default function ArticleCreationRoute({
               >
                 <Atom className="size-4 mr-2" /> Generate Slug
               </Button>
-              <p className="text-red-500 text-sm">{fields.slug.errors}</p>
+              <p className="text-red-500 text-sm">
+                {fields.slug.errors || lastResult?.message}
+              </p>
             </div>
 
             <div className="grid gap-2">
