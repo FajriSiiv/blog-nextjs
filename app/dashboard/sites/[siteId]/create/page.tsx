@@ -123,9 +123,7 @@ export default function ArticleCreationRoute({
               >
                 <Atom className="size-4 mr-2" /> Generate Slug
               </Button>
-              <p className="text-red-500 text-sm">
-                {fields.slug.errors || lastResult?.message}
-              </p>
+              <p className="text-red-500 text-sm">{fields.slug.errors}</p>
             </div>
 
             <div className="grid gap-2">

@@ -41,11 +41,6 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
 
 export async function CreatePostAction(prevState: any, formData: FormData) {
   const user = await requireUser();
-  const slugUnique = await checkingSlug(formData.get("slug") as string);
-
-  if (slugUnique.status === "error") {
-    return slugUnique;
-  }
 
   const submission = await parseWithZod(formData, {
     schema: PostSchema,
